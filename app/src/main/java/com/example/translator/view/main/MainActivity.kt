@@ -1,13 +1,10 @@
 package com.example.translator.view.main
 
 import android.os.Bundle
-import android.provider.Settings.Global.getString
 import android.view.View
 import android.view.View.GONE
 import android.view.View.VISIBLE
 import android.widget.Toast
-import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.translator.R
 import com.example.translator.databinding.ActivityMainBinding
@@ -16,13 +13,9 @@ import com.example.translator.model.data.DataModel
 import com.example.translator.utils.network.isOnline
 import com.example.translator.view.base.BaseActivity
 import com.example.translator.view.main.adapter.MainAdapter
-import dagger.android.AndroidInjection
-import javax.inject.Inject
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class MainActivity : BaseActivity<AppState, MainInteractor>() {
-
-    @Inject
-    internal lateinit var viewModelFactory: ViewModelProvider.Factory
 
     private lateinit var binding: ActivityMainBinding
     override lateinit var model: MainViewModel
@@ -52,18 +45,11 @@ class MainActivity : BaseActivity<AppState, MainInteractor>() {
         }
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        AndroidInjection.inject(this)
-
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
-
-        model = viewModelFactory.create(MainViewModel::class.java)
-        model.subscribe().observe(this@MainActivity, Observer<AppState> { renderData(it) })
-
-        binding.searchFab.setOnClickListener(fabClickListener)
-        binding.mainActivityRecyclerview.layoutManager = LinearLayoutManager(applicationContext)
-        binding.mainActivityRecyclerview.adapter = adapter
+        initViewModel()
+        initViews()
     }
 
     override fun renderData(appState: AppState) {
@@ -73,7 +59,7 @@ class MainActivity : BaseActivity<AppState, MainInteractor>() {
                 val data = appState.data
                 if (data.isNullOrEmpty()) {
                     showAlertDialog(
-                        getString(R.string.dialog_tittle_sorry),
+                        getString(R.string.dialog_title_sorry),
                         getString(R.string.empty_server_response_on_success)
                     )
                 } else {
@@ -96,6 +82,21 @@ class MainActivity : BaseActivity<AppState, MainInteractor>() {
                 showAlertDialog(getString(R.string.error_stub), appState.error.message)
             }
         }
+    }
+
+    private fun initViewModel() {
+        if (binding.mainActivityRecyclerview.adapter != null) {
+            throw IllegalStateException("The ViewModel should be initialised first")
+        }
+        val viewModel: MainViewModel by viewModel()
+        model = viewModel
+        model.subscribe().observe(this@MainActivity, { renderData(it) })
+    }
+
+    private fun initViews() {
+        binding.searchFab.setOnClickListener(fabClickListener)
+        binding.mainActivityRecyclerview.layoutManager = LinearLayoutManager(applicationContext)
+        binding.mainActivityRecyclerview.adapter = adapter
     }
 
     private fun showViewWorking() {
