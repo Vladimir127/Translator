@@ -1,4 +1,6 @@
-package com.example.translator
+package com.example.translator.view.base
+
+import com.example.translator.model.data.AppState
 
 // Нижний уровень. View знает о контексте и фреймворке
 interface View {

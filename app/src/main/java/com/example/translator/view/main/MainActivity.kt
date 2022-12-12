@@ -1,12 +1,18 @@
-package com.example.translator
+package com.example.translator.view.main
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View.GONE
 import android.view.View.VISIBLE
 import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.translator.R
 import com.example.translator.databinding.ActivityMainBinding
+import com.example.translator.model.data.AppState
+import com.example.translator.model.data.DataModel
+import com.example.translator.presenter.Presenter
+import com.example.translator.view.base.BaseActivity
+import com.example.translator.view.base.View
+import com.example.translator.view.main.adapter.MainAdapter
 
 class MainActivity : BaseActivity<AppState>() {
 

@@ -1,4 +1,4 @@
-package com.example.translator
+package com.example.translator.model.repository
 
 import io.reactivex.Observable
 

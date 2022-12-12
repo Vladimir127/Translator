@@ -1,4 +1,4 @@
-package com.example.translator
+package com.example.translator.rx
 
 import io.reactivex.Scheduler
 

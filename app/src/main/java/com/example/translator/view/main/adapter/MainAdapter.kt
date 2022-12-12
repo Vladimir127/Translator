@@ -1,10 +1,12 @@
-package com.example.translator
+package com.example.translator.view.main.adapter
 
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import com.example.translator.R
+import com.example.translator.model.data.DataModel
 
 class MainAdapter(
     private var onListItemClickListener: OnListItemClickListener,

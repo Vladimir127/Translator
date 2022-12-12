@@ -1,4 +1,4 @@
-package com.example.translator
+package com.example.translator.model.data
 
 sealed class AppState {
     data class Success(val data: List<DataModel>?) : AppState()
