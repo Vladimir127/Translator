@@ -15,8 +15,8 @@ import com.bumptech.glide.request.RequestOptions
 import com.bumptech.glide.request.target.Target
 import com.example.translator.R
 import com.example.translator.databinding.ActivityDescriptionBinding
-import com.example.translator.utils.network.isOnline
-import com.example.translator.utils.ui.AlertDialogFragment
+import com.example.utils.network.isOnline
+import com.example.utils.ui.AlertDialogFragment
 import com.squareup.picasso.Callback
 import com.squareup.picasso.Picasso
 import coil.ImageLoader
