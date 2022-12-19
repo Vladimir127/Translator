@@ -1,11 +1,17 @@
 package com.example.translator.di
 
 import androidx.room.Room
+import com.example.historyscreen.view.history.HistoryActivity
+import com.example.historyscreen.view.history.HistoryInteractor
+import com.example.historyscreen.view.history.HistoryViewModel
 import com.example.model.data.DataModel
 import com.example.repository.room.HistoryDataBase
 import com.example.repository.RetrofitImplementation
+import com.example.translator.view.main.MainActivity
 import com.example.translator.view.main.MainInteractor
 import com.example.translator.view.main.MainViewModel
+import org.koin.androidx.viewmodel.dsl.viewModel
+import org.koin.core.qualifier.named
 import org.koin.dsl.module
 
 val application = module {
@@ -24,16 +30,15 @@ val application = module {
 }
 
 val mainScreen = module {
-    factory { MainViewModel(get()) }
-    factory { MainInteractor(get(), get()) }
+    scope(named<MainActivity>()) {
+        scoped { MainInteractor(get(), get()) }
+        viewModel { MainViewModel(get()) }
+    }
 }
 
 val historyScreen = module {
-    factory { com.example.historyscreen.view.history.HistoryViewModel(get()) }
-    factory {
-        com.example.historyscreen.view.history.HistoryInteractor(
-            get(),
-            get()
-        )
+    scope(named<HistoryActivity>()) {
+        scoped { HistoryInteractor(get(), get()) }
+        viewModel { HistoryViewModel(get()) }
     }
 }
