@@ -1,23 +1,15 @@
 package com.example.repository
 
 import com.example.model.data.AppState
-import com.example.model.data.DataModel
-import com.example.model.data.Meanings
+import com.example.model.data.dto.SearchResultDto
+import com.example.model.data.dto.MeaningsDto
 import com.example.repository.room.HistoryEntity
-
-fun parseOnlineSearchResults(appState: AppState): AppState {
-    return AppState.Success(mapResult(appState, true))
-}
-
-fun parseLocalSearchResults(appState: AppState): AppState {
-    return AppState.Success(mapResult(appState, false))
-}
 
 private fun mapResult(
     appState: AppState,
     isOnline: Boolean
-): List<DataModel> {
-    val newSearchResults = arrayListOf<DataModel>()
+): List<SearchResultDto> {
+    val newSearchResults = arrayListOf<SearchResultDto>()
     when (appState) {
         is AppState.Success -> {
             getSuccessResultData(appState, isOnline, newSearchResults)
@@ -29,9 +21,9 @@ private fun mapResult(
 private fun getSuccessResultData(
     appState: AppState.Success,
     isOnline: Boolean,
-    newDataModels: ArrayList<DataModel>
+    newDataModels: ArrayList<SearchResultDto>
 ) {
-    val dataModels: List<DataModel> = appState.data as List<DataModel>
+    val dataModels: List<SearchResultDto> = appState.data as List<SearchResultDto>
     if (dataModels.isNotEmpty()) {
         if (isOnline) {
             for (searchResult in dataModels) {
@@ -39,31 +31,31 @@ private fun getSuccessResultData(
             }
         } else {
             for (searchResult in dataModels) {
-                newDataModels.add(DataModel(searchResult.text, arrayListOf()))
+                newDataModels.add(SearchResultDto(searchResult.text, arrayListOf()))
             }
         }
     }
 }
 
-private fun parseOnlineResult(dataModel: DataModel, newDataModels: ArrayList<DataModel>) {
+private fun parseOnlineResult(dataModel: SearchResultDto, newDataModels: ArrayList<SearchResultDto>) {
     if (!dataModel.text.isNullOrBlank() && !dataModel.meanings.isNullOrEmpty()) {
-        val newMeanings = arrayListOf<Meanings>()
+        val newMeanings = arrayListOf<MeaningsDto>()
         for (meaning in dataModel.meanings!!) {
             if (meaning.translation != null && !meaning.translation!!.translation.isNullOrBlank()) {
-                newMeanings.add(Meanings(meaning.translation, meaning.imageUrl))
+                newMeanings.add(MeaningsDto(meaning.translation, meaning.imageUrl))
             }
         }
         if (newMeanings.isNotEmpty()) {
-            newDataModels.add(DataModel(dataModel.text, newMeanings))
+            newDataModels.add(SearchResultDto(dataModel.text, newMeanings))
         }
     }
 }
 
-fun mapHistoryEntityToSearchResult(list: List<HistoryEntity>): List<DataModel> {
-    val searchResult = ArrayList<DataModel>()
+fun mapHistoryEntityToSearchResult(list: List<HistoryEntity>): List<SearchResultDto> {
+    val searchResult = ArrayList<SearchResultDto>()
     if (!list.isNullOrEmpty()) {
         for (entity in list) {
-            searchResult.add(DataModel(entity.word, null))
+            searchResult.add(SearchResultDto(entity.word, null))
         }
     }
     return searchResult
@@ -76,7 +68,7 @@ fun convertDataModelSuccessToEntity(appState: AppState): HistoryEntity? {
             if (searchResult.isNullOrEmpty() || searchResult[0].text.isNullOrEmpty()) {
                 null
             } else {
-                HistoryEntity(searchResult[0].text!!, null)
+                HistoryEntity(searchResult[0].text, null)
             }
         }
         else -> null
@@ -84,7 +76,7 @@ fun convertDataModelSuccessToEntity(appState: AppState): HistoryEntity? {
 }
 
 
-fun convertMeaningsToString(meanings: List<Meanings>): String {
+fun convertMeaningsToString(meanings: List<MeaningsDto>): String {
     var meaningsSeparatedByComma = String()
     for ((index, meaning) in meanings.withIndex()) {
         meaningsSeparatedByComma += if (index + 1 != meanings.size) {

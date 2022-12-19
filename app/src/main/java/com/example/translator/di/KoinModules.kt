@@ -4,7 +4,7 @@ import androidx.room.Room
 import com.example.historyscreen.view.history.HistoryActivity
 import com.example.historyscreen.view.history.HistoryInteractor
 import com.example.historyscreen.view.history.HistoryViewModel
-import com.example.model.data.DataModel
+import com.example.model.data.dto.SearchResultDto
 import com.example.repository.room.HistoryDataBase
 import com.example.repository.RetrofitImplementation
 import com.example.translator.view.main.MainActivity
@@ -17,12 +17,12 @@ import org.koin.dsl.module
 val application = module {
     single { Room.databaseBuilder(get(), HistoryDataBase::class.java, "HistoryDB").build() }
     single { get<HistoryDataBase>().historyDao() }
-    single<com.example.repository.Repository<List<DataModel>>> {
+    single<com.example.repository.Repository<List<SearchResultDto>>> {
         com.example.repository.RepositoryImplementation(
             RetrofitImplementation()
         )
     }
-    single<com.example.repository.RepositoryLocal<List<DataModel>>> {
+    single<com.example.repository.RepositoryLocal<List<SearchResultDto>>> {
         com.example.repository.RepositoryImplementationLocal(
             com.example.repository.RoomDataBaseImplementation(get())
         )

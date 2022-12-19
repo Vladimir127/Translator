@@ -9,11 +9,11 @@ import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.RecyclerView
 import com.example.core.BaseActivity
 import com.example.model.data.AppState
-import com.example.model.data.DataModel
+import com.example.model.data.dto.SearchResultDto
+import com.example.model.data.userdata.DataModel
 import com.example.translator.R
 import com.example.translator.databinding.ActivityMainBinding
 import com.example.translator.utils.convertMeaningsToString
-import com.example.utils.network.isOnline
 import com.example.translator.view.descriptionscreen.DescriptionActivity
 import com.example.translator.view.main.adapter.MainAdapter
 import com.example.utils.ui.viewById
@@ -38,9 +38,9 @@ class MainActivity : BaseActivity<AppState, MainInteractor>() {
                 startActivity(
                     DescriptionActivity.getIntent(
                         this@MainActivity,
-                        data.text!!,
-                        convertMeaningsToString(data.meanings!!),
-                        data.meanings!![0].imageUrl
+                        data.text,
+                        convertMeaningsToString(data.meanings),
+                        data.meanings[0].imageUrl
                     )
                 )
             }
@@ -48,7 +48,6 @@ class MainActivity : BaseActivity<AppState, MainInteractor>() {
     private val onSearchClickListener: SearchDialogFragment.OnSearchClickListener =
         object : SearchDialogFragment.OnSearchClickListener {
             override fun onClick(searchWord: String) {
-                isNetworkAvailable = isOnline(applicationContext)
                 if (isNetworkAvailable) {
                     model.getData(searchWord, isNetworkAvailable)
                 } else {

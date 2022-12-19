@@ -5,8 +5,8 @@ import androidx.lifecycle.Observer
 import com.example.core.BaseActivity
 import com.example.historyscreen.databinding.ActivityHistoryBinding
 import com.example.model.data.AppState
-import com.example.model.data.DataModel
-import org.koin.androidx.viewmodel.ext.android.viewModel
+import com.example.model.data.dto.SearchResultDto
+import com.example.model.data.userdata.DataModel
 
 class HistoryActivity : BaseActivity<AppState, HistoryInteractor>() {
 
@@ -38,7 +38,7 @@ class HistoryActivity : BaseActivity<AppState, HistoryInteractor>() {
         }
         val viewModel: HistoryViewModel by currentScope.inject()
         model = viewModel
-        model.subscribe().observe(this@HistoryActivity, Observer<AppState> { renderData(it) })
+        model.subscribe().observe(this@HistoryActivity, { renderData(it) })
     }
 
     private fun initViews() {
